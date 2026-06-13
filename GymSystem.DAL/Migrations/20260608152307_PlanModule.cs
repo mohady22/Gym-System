@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace A_MVC01.Migrations
+namespace GymSystem.DAL.Migrations
 {
     /// <inheritdoc />
     public partial class PlanModule : Migration
