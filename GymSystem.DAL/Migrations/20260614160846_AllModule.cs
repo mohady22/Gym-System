@@ -13,21 +13,6 @@ namespace GymSystem.DAL.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "UpdatedAt",
-                table: "Plans",
-                newName: "UpdateAt");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "Plans",
-                type: "varchar(50)",
-                maxLength: 50,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "varchar(20)",
-                oldMaxLength: 20);
-
             migrationBuilder.CreateTable(
                 name: "Categories",
                 columns: table => new
@@ -49,7 +34,7 @@ namespace GymSystem.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Photo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Photo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     JoinDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     UpdateAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
@@ -66,6 +51,26 @@ namespace GymSystem.DAL.Migrations
                     table.PrimaryKey("PK_Members", x => x.Id);
                     table.CheckConstraint("GymUser_EmailCheck", "Email LIKE '_%@_%._%'");
                     table.CheckConstraint("GymUser_PhoneCheck", "[Phone] LIKE '010%' OR [Phone] LIKE '011%' OR [Phone] LIKE '012%' OR [Phone] LIKE '015%'");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Plans",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
+                    Duration = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GetDate()"),
+                    UpdateAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Plans", x => x.Id);
+                    table.CheckConstraint("DurationCheckValue", "Duration Between 1 and 365");
                 });
 
             migrationBuilder.CreateTable(
@@ -296,25 +301,13 @@ namespace GymSystem.DAL.Migrations
                 name: "Members");
 
             migrationBuilder.DropTable(
+                name: "Plans");
+
+            migrationBuilder.DropTable(
                 name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Trainers");
-
-            migrationBuilder.RenameColumn(
-                name: "UpdateAt",
-                table: "Plans",
-                newName: "UpdatedAt");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "Plans",
-                type: "varchar(20)",
-                maxLength: 20,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "varchar(50)",
-                oldMaxLength: 50);
         }
     }
 }
