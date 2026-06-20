@@ -65,7 +65,7 @@ namespace GymSystem.BLL.Services.Classes
 
         public async Task<HealthRecordViewModel?> GetMemberHealthRecordAsync(int memberId, CancellationToken ct = default)
         {
-            var Record = await healthRecordRepository.FirstOrDefaultAsync(r => r.MemberId == memberId,false,ct);
+            var Record = await unitOfWork.GetRepository<HealthRecord>().FirstOrDefaultAsync(r => r.MemberId == memberId,false,ct);
             if (Record is null) return null;
             return new HealthRecordViewModel()
             {
