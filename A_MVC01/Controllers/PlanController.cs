@@ -1,4 +1,6 @@
 ﻿
+using GymManagementSystem.BLL.ViewModels.PlanViewModels;
+using GymSystem.BLL.Services.Interfaces;
 using GymSystem.DAL.Contexts;
 using GymSystem.DAL.Entities;
 using GymSystem.DAL.Repositories.Classes;
@@ -10,22 +12,35 @@ namespace A_MVC01.Controllers
 {
     public class PlanController : Controller
     {
-        private readonly IGenericRepository<Plan> planRepository;
-        public PlanController(IGenericRepository<Plan> _planRepository)
+        private readonly IPlanServices planServices;
+
+        public PlanController(IPlanServices planServices)
         {
-            planRepository = _planRepository;
+            this.planServices = planServices;
         }
-        public async Task<IActionResult> IndexAsync(CancellationToken token)
+        public async Task<IActionResult> IndexAsync(CancellationToken ct)
         {
-            var plans = await planRepository.GetAll(false,token);
+            var plans = await planServices.GetAllPlansAsync(ct);
             return View(plans);
         }
-        public async Task<IActionResult> Details(int Id,CancellationToken token)
+        [HttpGet]
+        public async Task<IActionResult> Details(
+           int id,
+           CancellationToken ct)
         {
-            var plans = await planRepository.GetById(Id,token);
-            if(plans == null)
-                RedirectToAction(nameof(Index));
-            return View(plans);
+            var plan =
+                await planServices.GetPlanByIdAsync(id, ct);
+
+            if (plan == null)
+            {
+                TempData["ErrorMessage"] =
+                    "Plan Not Found";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(plan);
         }
+       
     }
 }

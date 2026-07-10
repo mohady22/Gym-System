@@ -1,5 +1,6 @@
 using GymSystem.BLL.Services.Classes;
 using GymSystem.BLL.Services.Interfaces;
+using GymSystem.BLL.Utilities;
 using GymSystem.DAL.Contexts;
 using GymSystem.DAL.Repositories.Classes;
 using GymSystem.DAL.Repositories.Interfaces;
@@ -23,6 +24,10 @@ namespace A_MVC01
             //builder.Services.AddScoped(typeof(IGenericRepository<>) ,typeof(GenericRepository<>));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IMemberServices,MemberServices>();
+            builder.Services.AddScoped<ISessionServices, SessionServices>();
+            builder.Services.AddScoped<IPlanServices, PlanServices>();
+            builder.Services.AddScoped<ITrainerServices,TrainerServices>();
+            builder.Services.AddAutoMapper(m => m.AddProfile(new MappingProfile()));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
