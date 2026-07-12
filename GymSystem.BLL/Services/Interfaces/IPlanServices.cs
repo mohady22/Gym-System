@@ -17,7 +17,9 @@ namespace GymSystem.BLL.Services.Interfaces
 
         Task<PlanViewModel?> GetPlanByIdAsync(int planId,
             CancellationToken ct = default);
+        Task<Result> UpdatePlanAsync(int id, UpdatePlanViewModel model, CancellationToken ct = default);
+        Task<UpdatePlanViewModel?> GetPlanToUpdateAsync(int id, CancellationToken ct = default);
 
-        
+
     }
 }

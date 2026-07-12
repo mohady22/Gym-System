@@ -5,12 +5,13 @@ using GymSystem.DAL.Contexts;
 using GymSystem.DAL.Repositories.Classes;
 using GymSystem.DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace A_MVC01
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,7 @@ namespace A_MVC01
             builder.Services.AddAutoMapper(m => m.AddProfile(new MappingProfile()));
             var app = builder.Build();
 
+            await app.MigrateAndSeedAsync();
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {

@@ -1,6 +1,7 @@
 ﻿using GymSystem.DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Reflection.Emit;
 
 namespace GymSystemG03.DAL.Configurations
 {
@@ -13,6 +14,9 @@ namespace GymSystemG03.DAL.Configurations
 
             builder.Property(x => x.Note)
                    .HasMaxLength(500);
+            builder.Property(x => x.Height).HasColumnType("decimal(5,2)");
+
+            builder.Property(x => x.Weight).HasColumnType("decimal(5,2)");
         }
     }
 }

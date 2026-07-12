@@ -1,0 +1,30 @@
+[
+    {
+        "Name": "Basic Plan",
+        "Description": "Access to gym equipment during staffed hours",
+        "Duration": 30,
+        "Price": 300.0,
+        "IsActive": true
+    },
+    {
+        "Name": "Standard Plan",
+        "Description": "Includes gym equipment and 2 group classes per week",
+        "Duration": 60,
+        "Price": 500.0,
+        "IsActive": true
+    },
+    {
+        "Name": "Premium Plan",
+        "Description": "Unlimited access to equipment, classes, and sauna",
+        "Duration": 90,
+        "Price": 900.0,
+        "IsActive": true
+    },
+    {
+        "Name": "Annual Plan",
+        "Description": "Full year access with personal trainer sessions",
+        "Duration": 365,
+        "Price": 3000.0,
+        "IsActive": true
+    }
+]

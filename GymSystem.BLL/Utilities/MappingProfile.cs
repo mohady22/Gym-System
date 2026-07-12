@@ -40,6 +40,7 @@ namespace GymSystem.BLL.Utilities
 
             CreateMap<Plan, UpdatePlanViewModel>()
                 .ReverseMap();
+            CreateMap<UpdatePlanViewModel, Plan>();
         }
         public void MapTrainer()
         {

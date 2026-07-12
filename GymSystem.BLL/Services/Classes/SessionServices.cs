@@ -81,15 +81,7 @@ namespace GymSystem.BLL.Services.Classes
 
         }
 
-        public async Task<UpdateSessionViewModel> GetSessionToUpdateAsync(int sessionId, CancellationToken ct = default)
-        {
-            var session = await unitOfWork.GetRepository<Session>().GetById(sessionId, ct);
-            if (session is null) return null;
-
-            if (!await IsSessionValidForUpdateAsync(session, ct)) return null;
-            return mapper.Map<Session,UpdateSessionViewModel>(session);
-
-        }
+       
 
         public async Task<IEnumerable<TrainerSelectViewModel>> GetTrainersForDropDownAsync(CancellationToken ct = default)
         {
@@ -113,7 +105,15 @@ namespace GymSystem.BLL.Services.Classes
 
 
         }
+        public async Task<UpdateSessionViewModel> GetSessionToUpdateAsync(int sessionId, CancellationToken ct = default)
+        {
+            var session = await unitOfWork.GetRepository<Session>().GetById(sessionId, ct);
+            if (session is null) return null;
 
+            if (!await IsSessionValidForUpdateAsync(session, ct)) return null;
+            return mapper.Map<Session, UpdateSessionViewModel>(session);
+
+        }
         public async Task<Result> UpdateSessionAsync(int sessionId, UpdateSessionViewModel model, CancellationToken ct = default)
         {
             var sessionRepo =  unitOfWork.GetRepository<Session>();
