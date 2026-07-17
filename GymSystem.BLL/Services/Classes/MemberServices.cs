@@ -15,12 +15,14 @@ namespace GymSystem.BLL.Services.Classes
     public class MemberServices : IMemberServices
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IAttachementServices attachementServices;
 
 
         //GET
-        public MemberServices(IUnitOfWork unitOfWork)
+        public MemberServices(IUnitOfWork unitOfWork,IAttachementServices attachementServices)
         {
             this.unitOfWork = unitOfWork;
+            this.attachementServices = attachementServices;
         }
         public async Task<IEnumerable<MemberViewModel>> GetAllMembersAsync(CancellationToken ct = default)
         {
@@ -39,9 +41,9 @@ namespace GymSystem.BLL.Services.Classes
             
         }
 
-        public async Task<MemberViewModel?> GetMemberDetailsAsync(int memberId, CancellationToken ct = default)
+        public async Task<MemberViewModel?> GetMemberDetailsAsync(int id, CancellationToken ct = default)
         {
-            var member = await unitOfWork.GetRepository<Member>().GetById(memberId,ct);
+            var member = await unitOfWork.GetRepository<Member>().GetById(id,ct);
             if(member ==null) return null;
             var memberVM = new MemberViewModel()
             {
@@ -52,7 +54,7 @@ namespace GymSystem.BLL.Services.Classes
                 Gender = member.Gender.ToString(),
                 Address = $"{member.Address.BuildingNumber}-{member.Address.Street}-{member.Address.City}",
             };
-            var ActiveMembership = await unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(mb => mb.Id == memberId && mb.EndDate > DateTime.Now,false,ct);
+            var ActiveMembership = await unitOfWork.GetRepository<Membership>().FirstOrDefaultAsync(mb => mb.Id == id && mb.EndDate > DateTime.Now,false,ct);
             if (ActiveMembership is not null)
             {
                 var ActivePlan = await unitOfWork.GetRepository<Plan>().GetById(ActiveMembership.PlanId, ct);
@@ -119,6 +121,11 @@ namespace GymSystem.BLL.Services.Classes
                     Note = model.HealthRecordViewModel.Note,
                 }
             };
+            var photoName = await attachementServices.UploadAsync(model.PhotoFile.OpenReadStream(),model.PhotoFile.FileName,"MemberPictures",ct);
+            if(string.IsNullOrEmpty(photoName)) return false;   
+            member.Photo = photoName;
+
+
             unitOfWork.GetRepository<Member>().Add(member);
             var Result = await unitOfWork.CompleteAsync();
             return Result > 0;
@@ -153,6 +160,11 @@ namespace GymSystem.BLL.Services.Classes
             var hasFutureSession = await unitOfWork.GetRepository<Booking>().AnyAsync(b => b.MemberId == memberId && b.Session.EndDate > DateTime.Now, ct);
             if(hasFutureSession) return false;
             unitOfWork.GetRepository<Member>().Delete(memberId);
+
+            if (member.Photo is not null)
+            {
+                attachementServices.Delete(member.Photo, "MemberPictures");
+            }
             var Result = await unitOfWork.CompleteAsync();
             return Result > 0;
         }

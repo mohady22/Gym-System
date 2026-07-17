@@ -53,8 +53,17 @@ namespace GymSystem.BLL.Services.Classes
 
             if (plan is null) return null;
 
-            return mapper.Map<Plan,UpdatePlanViewModel>(plan);
+            var result = new UpdatePlanViewModel
+            {
+                PlanName = plan.Name,
+                Duration = plan.Duration,
+                Description = plan.Description,
+                Price= plan.Price,
+            };
+            return result;
         }
+
+        
 
         public async Task<Result>UpdatePlanAsync(int id,UpdatePlanViewModel model,CancellationToken ct = default)
         {
@@ -68,7 +77,7 @@ namespace GymSystem.BLL.Services.Classes
             if (model.Price <= 0)
                 return Result.Vaildation("Price must be greater than zero");
 
-            if (model.DurationDays <= 0)
+            if (model.Duration <= 0)
                 return Result.Vaildation("Duration must be greater than zero");
 
             mapper.Map(model, plan);
