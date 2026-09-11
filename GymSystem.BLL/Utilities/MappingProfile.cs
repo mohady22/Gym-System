@@ -2,6 +2,7 @@
 using GymManagementSystem.BLL.ViewModels.PlanViewModels;
 using GymManagementSystem.BLL.ViewModels.SessionViewModels;
 using GymManagementSystem.BLL.ViewModels.TrainerViewModels;
+using GymSystem.BLL.ViewModels.MembershipViewModels;
 using GymSystem.DAL.Entities;
 using GymSystemG03.BLL.ViewModels.MembersViewModels;
 using System;
@@ -20,6 +21,7 @@ namespace GymSystem.BLL.Utilities
             MapSession();
             MapPlan();
             MapTrainer();
+            MapMemberships();
         }
         public void MapSession()
         {
@@ -95,6 +97,17 @@ namespace GymSystem.BLL.Utilities
             .ForPath(dest => dest.Address.City, opt => opt.MapFrom(src => src.City));
 
             CreateMap<HealthRecord, HealthRecordViewModel>().ReverseMap();
+        }
+
+        public void MapMemberships()
+        {
+            CreateMap<Membership, MembershipViewModel>()
+                .ForMember(dist => dist.MemberName, option => option.MapFrom(src => src.Member.Name))
+                .ForMember(dist => dist.PlanName, option => option.MapFrom(src => src.Plan.Name))
+                .ForMember(dist => dist.StartDate, option => option.MapFrom(src => src.CreatedAt));
+            CreateMap<CreateMembershipViewModel, Membership>();
+            CreateMap<Member, MemberSelectListViewModel>();
+            CreateMap<Plan, PlanSelectListViewModel>();
         }
     }
 }

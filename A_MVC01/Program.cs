@@ -28,6 +28,13 @@ namespace A_MVC01
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IMemberServices,MemberServices>();
             builder.Services.AddScoped<ISessionServices, SessionServices>();
+            builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+            builder.Services.AddScoped<IMembershipServices, MembershipServices>();
+            builder.Services.AddScoped<IBookingServices, BookingServices>();
+            
+            
+
             builder.Services.AddScoped<IPlanServices, PlanServices>();
             builder.Services.AddScoped<ITrainerServices,TrainerServices>();
             builder.Services.AddScoped<IAnalyticsServices,AnalyticsServices>();

@@ -1,6 +1,7 @@
 ﻿using GymSystem.DAL.Contexts;
 using GymSystem.DAL.Entities;
 using GymSystem.DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,18 @@ namespace GymSystem.DAL.Repositories.Classes
         private readonly Dictionary<string, object> _repo = [];
 
         public ISessionRepository SessionRepository { get; }
+        public IMembershipRepository MembershipRepository { get; }
+
+        public IMembershipRepository membershipRepository => new MembershipRepository(dbContext);
+
+        public IBookingRepository bookingRepository { get;}
 
         public UnitOfWork(GymDbContext dbContext)
         {
             this.dbContext = dbContext;
             SessionRepository = new SessionRepository(dbContext);
+            MembershipRepository = new MembershipRepository(dbContext);
+            bookingRepository = new BookingRepository(dbContext);
         }
 
         public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity, new()
